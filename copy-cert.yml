@@ -4,32 +4,32 @@
   tasks:
     - name: Копируем dro4illa fullchain.cer
       copy:
-        src: /etc/nginx/ssl/\*.dro4illa.ru_dro4illa.ru_2048/fullchain.cer
-        dest: /etc/nginx/ssl/\*.dro4illa.ru_dro4illa.ru_2048/fullchain.cer
+        src: /etc/nginx/ssl/dro4illa.ru/fullchain.cer
+        dest: /etc/nginx/ssl/dro4illa.ru/fullchain.cer
         owner: root
         group: root
         mode: '0600'
 
     - name: Копируем dro4illa privkey.pem
       copy:
-        src: /etc/nginx/ssl/\*.dro4illa.ru_dro4illa.ru_2048/private.key
-        dest: /etc/nginx/ssl/\*.dro4illa.ru_dro4illa.ru_2048/private.key
+        src: /etc/nginx/ssl/dro4illa.ru/private.key
+        dest: /etc/nginx/ssl/dro4illa.ru/private.key
         owner: root
         group: root
         mode: '0600'
 
     - name: Копируем fullchain.cer
       copy:
-        src: /etc/nginx/ssl/\*.winvist.ru_winvist.ru_2048/fullchain.cer
-        dest: /etc/nginx/ssl/\*.winvist.ru_winvist.ru_2048/fullchain.cer
+        src: /etc/nginx/ssl/winvist.ru/fullchain.cer
+        dest: /etc/nginx/ssl/winvist.ru/fullchain.cer
         owner: root
         group: root
         mode: '0600'
 
     - name: Копируем privkey.pem
       copy:
-        src: /etc/nginx/ssl/\*.winvist.ru_winvist.ru_2048/private.key
-        dest: /etc/nginx/ssl/\*.winvist.ru_winvist.ru_2048/private.key
+        src: /etc/nginx/ssl/winvist.ru/private.key
+        dest: /etc/nginx/ssl/winvist.ru/private.key
         owner: root
         group: root
         mode: '0600'
