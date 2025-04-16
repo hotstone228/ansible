@@ -9,7 +9,6 @@
         owner: root
         group: root
         mode: '0600'
-      delegate_to: master-hostname
 
     - name: Копируем dro4illa privkey.pem
       copy:
@@ -18,7 +17,6 @@
         owner: root
         group: root
         mode: '0600'
-      delegate_to: master-hostname
 
     - name: Копируем fullchain.cer
       copy:
@@ -27,7 +25,6 @@
         owner: root
         group: root
         mode: '0600'
-      delegate_to: master-hostname
 
     - name: Копируем privkey.pem
       copy:
@@ -36,4 +33,3 @@
         owner: root
         group: root
         mode: '0600'
-      delegate_to: master-hostname
