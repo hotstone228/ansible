@@ -1,0 +1,13 @@
+- name: Копируем сертификаты winvist.ru на удалённые сервера
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Копируем папку winvist.ru целиком
+      copy:
+        src: /etc/nginx/ssl/winvist.ru/
+        dest: /etc/nginx/ssl/winvist.ru/
+        owner: root
+        group: root
+        mode: "0600" # Применяется ко всем файлам
+        directory_mode: "0700" # Применяется ко всем папкам внутри
+        recurse: yes

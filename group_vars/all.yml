@@ -1,0 +1,5 @@
+# имя универсального юзера
+ssh_user: user
+
+# автоматически собираем все *.pub из files/pubkeys/*
+ssh_user_pubkeys: "{{ lookup('fileglob', 'files/pubkeys/*.pub', wantlist=True) | map('file') | list }}"
