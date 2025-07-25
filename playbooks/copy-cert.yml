@@ -46,13 +46,9 @@
         src: /etc/nginx/ssl/winvist.ru/fullchain.cer
         dest: /etc/pve/local/pve-ssl.pem
         owner: root
-        group: root
-        mode: "0600"
 
     - name: Заменяем pve-ssl.key
       ansible.builtin.copy:
         src: /etc/nginx/ssl/winvist.ru/private.key
         dest: /etc/pve/local/pve-ssl.key
         owner: root
-        group: root
-        mode: "0600"
