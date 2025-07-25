@@ -1,5 +1,6 @@
-- name: Копируем сертификаты winvist.ru на удалённые сервера
-  hosts: all
+
+ - name: Копируем сертификаты winvist.ru на webservers и remotes
+  hosts: webservers,remotes
   become: yes
   tasks:
     - name: Устанавливаем rsync (если отсутствует)
@@ -15,10 +16,44 @@
         group: root
         mode: "0700"
 
-    - name: Копируем папку winvist.ru целиком
-      ansible.builtin.synchronize:
-        src: /etc/nginx/ssl/winvist.ru/
-        dest: /etc/nginx/ssl/winvist.ru/
-        recursive: yes
-        rsync_opts:
-          - "--chmod=F0600,D0700"
+    - name: Копируем fullchain.cer
+      ansible.builtin.copy:
+        src: /etc/nginx/ssl/winvist.ru/fullchain.cer
+        dest: /etc/nginx/ssl/winvist.ru/fullchain.cer
+        owner: root
+        group: root
+        mode: "0600"
+
+    - name: Копируем private.key
+      ansible.builtin.copy:
+        src: /etc/nginx/ssl/winvist.ru/private.key
+        dest: /etc/nginx/ssl/winvist.ru/private.key
+        owner: root
+        group: root
+        mode: "0600"
+
+- name: Копируем сертификаты winvist.ru на proxmox
+  hosts: proxmox
+  become: yes
+  tasks:
+    - name: Устанавливаем rsync (если отсутствует)
+      ansible.builtin.package:
+        name: rsync
+        state: present
+
+    - name: Заменяем pve-ssl.pem
+      ansible.builtin.copy:
+        src: /etc/nginx/ssl/winvist.ru/fullchain.cer
+        dest: /etc/pve/local/pve-ssl.pem
+        owner: root
+        group: root
+        mode: "0600"
+
+    - name: Заменяем pve-ssl.key
+      ansible.builtin.copy:
+        src: /etc/nginx/ssl/winvist.ru/private.key
+        dest: /etc/pve/local/pve-ssl.key
+        owner: root
+        group: root
+        mode: "0600"
+
