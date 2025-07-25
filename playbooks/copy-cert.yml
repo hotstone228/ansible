@@ -1,5 +1,5 @@
 - name: Копируем сертификаты winvist.ru на удалённые сервера
-  hosts: webservers
+  hosts: all
   become: yes
   tasks:
     - name: Копируем папку winvist.ru целиком
