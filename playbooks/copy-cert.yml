@@ -1,5 +1,5 @@
-
- - name: Копируем сертификаты winvist.ru на webservers и remotes
+---
+- name: Копируем сертификаты winvist.ru на webservers и remotes
   hosts: webservers,remotes
   become: yes
   tasks:
@@ -56,4 +56,3 @@
         owner: root
         group: root
         mode: "0600"
-
