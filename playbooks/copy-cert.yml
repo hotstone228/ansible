@@ -3,11 +3,9 @@
   become: yes
   tasks:
     - name: Копируем папку winvist.ru целиком
-      copy:
+      ansible.builtin.synchronize:
         src: /etc/nginx/ssl/winvist.ru/
         dest: /etc/nginx/ssl/winvist.ru/
-        owner: root
-        group: root
-        mode: "0600" # Применяется ко всем файлам
-        directory_mode: "0700" # Применяется ко всем папкам внутри
-        recurse: yes
+        recursive: yes
+        rsync_opts:
+          - "--chmod=F0600,D0700"
