@@ -2,6 +2,19 @@
   hosts: all
   become: yes
   tasks:
+    - name: Устанавливаем rsync (если отсутствует)
+      ansible.builtin.package:
+        name: rsync
+        state: present
+
+    - name: Создаём директорию /etc/nginx/ssl на удалённом сервере
+      ansible.builtin.file:
+        path: /etc/nginx/ssl
+        state: directory
+        owner: root
+        group: root
+        mode: "0700"
+
     - name: Копируем папку winvist.ru целиком
       ansible.builtin.synchronize:
         src: /etc/nginx/ssl/winvist.ru/
