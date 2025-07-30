@@ -24,6 +24,22 @@
         group: root
         mode: "0600"
 
+    - name: Извлекаем server.crt из fullchain.cer
+      ansible.builtin.shell:
+        cmd: |
+          awk '/-----END CERTIFICATE-----/{print; exit} {print}' /etc/nginx/ssl/winvist.ru/fullchain.cer > /etc/nginx/ssl/winvist.ru/server.crt
+      args:
+        creates: /etc/nginx/ssl/winvist.ru/server.crt
+      become: yes
+
+    - name: Извлекаем ca.crt из fullchain.cer
+      ansible.builtin.shell:
+        cmd: |
+          awk 'f;/-----END CERTIFICATE-----/{f=1}' /etc/nginx/ssl/winvist.ru/fullchain.cer > /etc/nginx/ssl/winvist.ru/ca.crt
+      args:
+        creates: /etc/nginx/ssl/winvist.ru/ca.crt
+      become: yes
+
     - name: Копируем private.key
       ansible.builtin.copy:
         src: /etc/nginx/ssl/winvist.ru/private.key
