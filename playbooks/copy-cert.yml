@@ -68,3 +68,8 @@
         src: /etc/nginx/ssl/winvist.ru/private.key
         dest: /etc/pve/local/pve-ssl.key
         owner: root
+
+    - name: Перезапускаем pveproxy после замены сертификатов
+      ansible.builtin.shell:
+        cmd: systemctl restart pveproxy
+      become: yes
