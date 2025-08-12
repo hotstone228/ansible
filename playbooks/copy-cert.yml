@@ -63,3 +63,28 @@
       ansible.builtin.shell:
         cmd: systemctl restart pveproxy
       become: yes
+
+- name: Копируем сертификаты на kuma
+  hosts: kuma
+  become: yes
+  tasks:
+    - name: Копируем external.cert
+      ansible.builtin.copy:
+        src: /etc/nginx/ssl/winvist.ru/fullchain.cer
+        dest: /opt/kaspersky/kuma/core/00000000-0000-0000-0000-000000000000/certificates/external.cert
+        owner: kuma
+        group: kuma
+        mode: "0600"
+
+    - name: Копируем external.key
+      ansible.builtin.copy:
+        src: /etc/nginx/ssl/winvist.ru/private.key
+        dest: /opt/kaspersky/kuma/core/00000000-0000-0000-0000-000000000000/certificates/external.key
+        owner: kuma
+        group: kuma
+        mode: "0600"
+
+    - name: Перезапускаем kuma-core сервис
+      ansible.builtin.shell:
+        cmd: systemctl restart kuma-core-00000000-0000-0000-0000-000000000000.service
+      become: yes
