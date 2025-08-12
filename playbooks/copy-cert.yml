@@ -52,17 +52,20 @@
         src: /etc/nginx/ssl/winvist.ru/fullchain.cer
         dest: /etc/pve/local/pve-ssl.pem
         owner: root
+      register: proxmox_cert_copy
 
     - name: Заменяем pve-ssl.key
       ansible.builtin.copy:
         src: /etc/nginx/ssl/winvist.ru/private.key
         dest: /etc/pve/local/pve-ssl.key
         owner: root
+      register: proxmox_key_copy
 
     - name: Перезапускаем pveproxy после замены сертификатов
       ansible.builtin.shell:
         cmd: systemctl restart pveproxy
       become: yes
+      when: proxmox_cert_copy.changed or proxmox_key_copy.changed
 
 - name: Копируем сертификаты на kuma
   hosts: kuma
@@ -75,6 +78,7 @@
         owner: kuma
         group: kuma
         mode: "0600"
+      register: kuma_cert_copy
 
     - name: Копируем external.key
       ansible.builtin.copy:
@@ -83,8 +87,10 @@
         owner: kuma
         group: kuma
         mode: "0600"
+      register: kuma_key_copy
 
     - name: Перезапускаем kuma-core сервис
       ansible.builtin.shell:
         cmd: systemctl restart kuma-core-00000000-0000-0000-0000-000000000000.service
       become: yes
+      when: kuma_cert_copy.changed or kuma_key_copy.changed
