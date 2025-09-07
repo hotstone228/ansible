@@ -1,96 +1,12 @@
-- name: Устанавливаем rsync и создаём директорию /etc/nginx/ssl на всех машинах
-  hosts: all
+- name: Test Linux connectivity
+  hosts: webservers
   become: yes
   tasks:
-    - name: Устанавливаем rsync (если отсутствует)
-      ansible.builtin.package:
-        name: rsync
-        state: present
-
-    - name: Создаём директорию /etc/nginx/ssl
-      ansible.builtin.file:
-        path: /etc/nginx/ssl
-        state: directory
-        owner: root
-        group: root
-        mode: "0700"
-
-- name: Копируем сертификаты winvist.ru на webservers и remotes
-  hosts: webservers,remotes
+    - name: Ping
+      ansible.builtin.ping:
+- name: Test Linux connectivity
+  hosts: webservers
   become: yes
   tasks:
-    - name: Извлекаем server.crt из fullchain.cer
-      ansible.builtin.shell:
-        cmd: |
-          awk '/-----END CERTIFICATE-----/{print; exit} {print}' /etc/nginx/ssl/winvist.ru/fullchain.cer > /etc/nginx/ssl/winvist.ru/server.crt
-      args:
-        creates: /etc/nginx/ssl/winvist.ru/server.crt
-      become: yes
-
-    - name: Извлекаем ca.crt из fullchain.cer
-      ansible.builtin.shell:
-        cmd: |
-          awk 'f;/-----END CERTIFICATE-----/{f=1}' /etc/nginx/ssl/winvist.ru/fullchain.cer > /etc/nginx/ssl/winvist.ru/ca.crt
-      args:
-        creates: /etc/nginx/ssl/winvist.ru/ca.crt
-      become: yes
-
-    - name: Копируем private.key
-      ansible.builtin.copy:
-        src: /etc/nginx/ssl/winvist.ru/private.key
-        dest: /etc/nginx/ssl/winvist.ru/private.key
-        owner: root
-        group: root
-        mode: "0600"
-
-- name: Копируем сертификаты winvist.ru на proxmox
-  hosts: proxmox
-  become: yes
-  tasks:
-    - name: Заменяем pve-ssl.pem
-      ansible.builtin.copy:
-        src: /etc/nginx/ssl/winvist.ru/fullchain.cer
-        dest: /etc/pve/local/pve-ssl.pem
-        owner: root
-      register: proxmox_cert_copy
-
-    - name: Заменяем pve-ssl.key
-      ansible.builtin.copy:
-        src: /etc/nginx/ssl/winvist.ru/private.key
-        dest: /etc/pve/local/pve-ssl.key
-        owner: root
-      register: proxmox_key_copy
-
-    - name: Перезапускаем pveproxy после замены сертификатов
-      ansible.builtin.shell:
-        cmd: systemctl restart pveproxy
-      become: yes
-      when: proxmox_cert_copy.changed or proxmox_key_copy.changed
-
-- name: Копируем сертификаты на kuma
-  hosts: kuma
-  become: yes
-  tasks:
-    - name: Копируем external.cert
-      ansible.builtin.copy:
-        src: /etc/nginx/ssl/winvist.ru/fullchain.cer
-        dest: /opt/kaspersky/kuma/core/00000000-0000-0000-0000-000000000000/certificates/external.cert
-        owner: kuma
-        group: kuma
-        mode: "0600"
-      register: kuma_cert_copy
-
-    - name: Копируем external.key
-      ansible.builtin.copy:
-        src: /etc/nginx/ssl/winvist.ru/private.key
-        dest: /opt/kaspersky/kuma/core/00000000-0000-0000-0000-000000000000/certificates/external.key
-        owner: kuma
-        group: kuma
-        mode: "0600"
-      register: kuma_key_copy
-
-    - name: Перезапускаем kuma-core сервис
-      ansible.builtin.shell:
-        cmd: systemctl restart kuma-core-00000000-0000-0000-0000-000000000000.service
-      become: yes
-      when: kuma_cert_copy.changed or kuma_key_copy.changed
+    - name: Ping
+      ansible.builtin.ping:
